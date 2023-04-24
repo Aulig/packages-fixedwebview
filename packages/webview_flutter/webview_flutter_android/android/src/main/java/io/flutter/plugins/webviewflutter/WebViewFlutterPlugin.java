@@ -26,6 +26,8 @@ import io.flutter.plugins.webviewflutter.GeneratedAndroidWebView.WebSettingsHost
 import io.flutter.plugins.webviewflutter.GeneratedAndroidWebView.WebStorageHostApi;
 import io.flutter.plugins.webviewflutter.GeneratedAndroidWebView.WebViewClientHostApi;
 import io.flutter.plugins.webviewflutter.GeneratedAndroidWebView.WebViewHostApi;
+import java.lang.ref.WeakReference;
+import android.app.Activity;
 
 /**
  * Java platform implementation of the webview_flutter plugin.
@@ -40,6 +42,8 @@ public class WebViewFlutterPlugin implements FlutterPlugin, ActivityAware {
   private FlutterPluginBinding pluginBinding;
   private WebViewHostApiImpl webViewHostApi;
   private JavaScriptChannelHostApiImpl javaScriptChannelHostApi;
+
+  public static WeakReference<Activity> activityRef;
 
   /**
    * Add an instance of this to {@link io.flutter.embedding.engine.plugins.PluginRegistry} to
@@ -180,7 +184,12 @@ public class WebViewFlutterPlugin implements FlutterPlugin, ActivityAware {
 
   private void updateContext(Context context) {
     webViewHostApi.setContext(context);
+    updateActivity((Activity)context);
     javaScriptChannelHostApi.setPlatformThreadHandler(new Handler(context.getMainLooper()));
+  }
+
+  public static void updateActivity(Activity activity) {
+    activityRef = new WeakReference<Activity>(activity);
   }
 
   /** Maintains instances used to communicate with the corresponding objects in Dart. */

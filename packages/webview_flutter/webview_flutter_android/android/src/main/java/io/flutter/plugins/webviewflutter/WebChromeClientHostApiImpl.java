@@ -19,6 +19,14 @@ import androidx.annotation.RequiresApi;
 import androidx.annotation.VisibleForTesting;
 import io.flutter.plugins.webviewflutter.GeneratedAndroidWebView.WebChromeClientHostApi;
 import java.util.Objects;
+import android.annotation.SuppressLint;
+import android.app.Activity;
+import android.content.pm.ActivityInfo;
+import android.os.Build;
+import android.os.Message;
+import android.view.View;
+import android.webkit.*;
+import android.widget.FrameLayout;
 
 /**
  * Host api implementation for {@link WebChromeClient}.
@@ -95,6 +103,11 @@ public class WebChromeClientHostApiImpl implements WebChromeClientHostApi {
    */
   public static class SecureWebChromeClient extends WebChromeClient {
     @Nullable WebViewClient webViewClient;
+    private WebView webView;
+    private boolean isFullscreen = false;
+    private WebChromeClient.CustomViewCallback customViewCallback;
+    private View customView;
+    private int currentUiSettings;
 
     @Override
     public boolean onCreateWindow(
@@ -102,7 +115,68 @@ public class WebChromeClientHostApiImpl implements WebChromeClientHostApi {
         boolean isDialog,
         boolean isUserGesture,
         @NonNull Message resultMsg) {
+
+      if(webView == null) {
+        webView = view;
+      }
+
       return onCreateWindow(view, resultMsg, new WebView(view.getContext()));
+    }
+
+    @Override
+    public void onShowCustomView(View view, CustomViewCallback callback) {
+      super.onShowCustomView(view, callback);
+      if (customView != null) {
+        callback.onCustomViewHidden();
+        return;
+      }
+      customView = view;
+      customViewCallback = callback;
+
+      Activity activity = io.flutter.plugins.webviewflutter.WebViewFlutterPlugin.activityRef.get();
+      if (activity != null) {
+        ((FrameLayout) activity.getWindow().getDecorView()).addView(view);
+        View currentView = activity.getWindow().getDecorView();
+
+        /*
+          when compileSDK gets bumped to 30, SystemUiVisibility stuff will get deprecated. Use something like
+          if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+            activity.getWindow().setDecorFitsSystemWindows();
+          }
+          else {
+            current code
+          }
+        */
+        this.currentUiSettings = currentView.getSystemUiVisibility();
+        currentView.setSystemUiVisibility(View.SYSTEM_UI_FLAG_FULLSCREEN |
+                View.SYSTEM_UI_FLAG_HIDE_NAVIGATION | View.SYSTEM_UI_FLAG_IMMERSIVE);
+        activity.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
+      }
+      isFullscreen = true;
+    }
+
+    @SuppressLint("SourceLockedOrientationActivity")
+    @Override
+    public void onHideCustomView() {
+      if (customView == null) return;
+
+      Activity activity = io.flutter.plugins.webviewflutter.WebViewFlutterPlugin.activityRef.get();
+
+      if (activity != null) {
+        ((FrameLayout) activity.getWindow().getDecorView()).removeView(this.customView);
+        this.customView = null;
+        activity.getWindow().getDecorView().setSystemUiVisibility(this.currentUiSettings);
+        activity.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+
+        customViewCallback.onCustomViewHidden();
+      }
+      isFullscreen = false;
+      super.onHideCustomView();
+    }
+
+    boolean onBackPressed() {
+      if (isFullscreen) onHideCustomView();
+      return isFullscreen;
     }
 
     /**
