@@ -1,3 +1,11 @@
+## 10.1.3
+
+* Adds generic `Object` field support to data classes.
+
+## 10.1.2
+
+* [swift] Fixes a crash when passing `null` for nested nullable classes. 
+
 ## 10.1.1
 
 * Updates README to better reflect modern usage.
