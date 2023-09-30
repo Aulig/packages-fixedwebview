@@ -7,3 +7,11 @@ Old fixes that we removed since they were fixed upstream:
   - Fixed on Android based on https://github.com/flutter/plugins/pull/3722 and https://github.com/lycstar/plugins who had updated it to a more recent webview_flutter version.
   - Seems to work out of the box on iOS these days, previously we needed to set something like [[self preferencesForIdentifier:identifier] setValue:@YES forKey:@"fullScreenEnabled"] or WKPreferences* preferences = [[_webView configuration] preferences]; [preferences setValue:@YES forKey:@"fullScreenEnabled"];
   Currently it'd mean setting [preferences setValue:@YES forKey:@"fullScreenEnabled"]; in FWFPreferencesHostApi.preferencesForIdentifier for example (not a clean way of doing it but oh well).
+
+
+How to pull in upstream changes if it doesn't work through Githubs web interface:
+- Open Github desktop
+- Branch < Compare to Branch
+- Use the search to select upstream/main
+- Create Merge Commit
+- Keep readme from our repository
