@@ -1,3 +1,11 @@
+## NEXT
+
+* Updates minimum supported SDK version to Flutter 3.10/Dart 3.0.
+
+## 0.10.8+13
+
+* Updates annotations lib to 1.7.0.
+
 ## 0.10.8+12
 
 * Fixes handling of autofocus state when taking a picture.
