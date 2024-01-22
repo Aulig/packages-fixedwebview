@@ -308,7 +308,7 @@
   return [[self webViewForIdentifier:identifier] customUserAgent];
 }
 
-- (nullable PWebHistory *)
+- (nullable FWFPWebHistory *)
     getCopyBackForwardListForWebViewWithIdentifier:(NSInteger)identifier
                                       error:
                                           (FlutterError *_Nullable __autoreleasing *_Nonnull)error {
@@ -337,9 +337,9 @@
         [history addObject:[webHistoryItem toList]];
     }
 
-    PWebHistory *webHistory = [[PWebHistory alloc] init];
-    webHistory.list = history;
-    webHistory.currentIndex = currentIndex;
+    FWFPWebHistory *webHistory = [[PWebHistory alloc] init];
+    webHistory.history = history;
+    webHistory.currentIndex = @(currentIndex);
 
     return webHistory;
 }
