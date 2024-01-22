@@ -333,6 +333,8 @@ class WebViewHostApiImpl extends WebViewHostApi {
         "originalUrl": e?.originalUrl,
         "title": e?.title,
         "url": e?.url,
+        "index": e?.index,
+        "offset": e?.offset,
       }).toList(),
     };
   }

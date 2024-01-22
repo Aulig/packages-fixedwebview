@@ -1076,6 +1076,8 @@ class WKWebViewHostApiImpl extends WKWebViewHostApi {
         "originalUrl": e?.originalUrl,
         "title": e?.title,
         "url": e?.url,
+        "index": e?.index,
+        "offset": e?.offset,
       }).toList(),
     };
   }
