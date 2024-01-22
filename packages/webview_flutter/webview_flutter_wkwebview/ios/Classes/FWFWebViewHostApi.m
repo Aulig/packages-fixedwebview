@@ -307,4 +307,41 @@
                                           (FlutterError *_Nullable __autoreleasing *_Nonnull)error {
   return [[self webViewForIdentifier:identifier] customUserAgent];
 }
+
+- (nullable PWebHistory *)
+    getCopyBackForwardListForWebViewWithIdentifier:(NSInteger)identifier
+                                      error:
+                                          (FlutterError *_Nullable __autoreleasing *_Nonnull)error {
+
+    WKWebView *webView = [self webViewForIdentifier:identifier];
+
+    WKBackForwardList *backForwardList = [webView backForwardList];
+    NSUInteger currentIndex = [[backForwardList backList] count];
+    NSMutableArray *completeList = [[backForwardList backList] mutableCopy];
+
+    if ([backForwardList currentItem] != nil) {
+        [completeList addObject:[backForwardList currentItem]];
+    }
+
+    [completeList addObjectsFromArray:[backForwardList forwardList]];
+
+    NSMutableArray *history = [NSMutableArray array];
+
+    for (WKBackForwardListItem *historyItem in completeList) {
+        // Convert WKBackForwardListItem to FWFPWebHistoryItem
+        FWFPWebHistoryItem *webHistoryItem = [FWFPWebHistoryItem makeWithOriginalUrl:[historyItem initialURL].absoluteString
+                                                                               title:[historyItem title]
+                                                                                 url:[historyItem URL].absoluteString
+                                                                               index:@([completeList indexOfObject:historyItem])
+                                                                              offset:@([completeList indexOfObject:historyItem] - currentIndex)];
+        [history addObject:[webHistoryItem toList]];
+    }
+
+    PWebHistory *webHistory = [[PWebHistory alloc] init];
+    webHistory.list = history;
+    webHistory.currentIndex = currentIndex;
+
+    return webHistory;
+}
+
 @end

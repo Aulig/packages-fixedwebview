@@ -1066,6 +1066,20 @@ class WKWebViewHostApiImpl extends WKWebViewHostApi {
     return getTitle(instanceManager.getIdentifier(instance)!);
   }
 
+  /// Get history
+  Future<Map<String, dynamic>?> getCopyBackForwardListForInstances(WKWebView instance) async {
+    final PWebHistory? wh = await getCopyBackForwardList(instanceManager.getIdentifier(instance)!);
+
+    return {
+      "currentIndex": wh!.currentIndex,
+      "hstory": wh.history!.map((e) => {
+        "originalUrl": e?.originalUrl,
+        "title": e?.title,
+        "url": e?.url,
+      }).toList(),
+    };
+  }
+
   /// Calls [getEstimatedProgress] with the ids of the provided object instances.
   Future<double> getEstimatedProgressForInstances(WKWebView instance) {
     return getEstimatedProgress(instanceManager.getIdentifier(instance)!);

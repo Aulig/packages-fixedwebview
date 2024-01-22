@@ -1119,6 +1119,11 @@ class WKWebView extends UIView {
     return _webViewApi.getTitleForInstances(this);
   }
 
+  /// get history
+  Future<Map<String, dynamic>?> getCopyBackForwardList() {
+    return _webViewApi.getCopyBackForwardListForInstances(this);
+  }
+
   /// Indicates whether horizontal swipe gestures trigger page navigation.
   ///
   /// The default value is false.

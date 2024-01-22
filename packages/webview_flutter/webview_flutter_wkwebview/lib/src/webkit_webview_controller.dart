@@ -483,6 +483,9 @@ class WebKitWebViewController extends PlatformWebViewController {
   Future<String?> getTitle() => _webView.getTitle();
 
   @override
+  Future<Map<String, dynamic>?> getCopyBackForwardList() => _webView.getCopyBackForwardList();
+
+  @override
   Future<void> scrollTo(int x, int y) {
     return _webView.scrollView.setContentOffset(Point<double>(
       x.toDouble(),
