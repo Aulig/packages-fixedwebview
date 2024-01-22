@@ -225,37 +225,37 @@
                                                   }];
 }
 
-- (void)webView:(WKWebView *)webView
-    runJavaScriptAlertPanelWithMessage:(NSString *)message
-                      initiatedByFrame:(WKFrameInfo *)frame
-                     completionHandler:(void (^)(void))completionHandler {
-  [self.UIDelegateAPI runJavaScriptAlertPanelForDelegateWithIdentifier:self
-                                                               message:message
-                                                                 frame:frame
-                                                     completionHandler:completionHandler];
-}
+//- (void)webView:(WKWebView *)webView
+//    runJavaScriptAlertPanelWithMessage:(NSString *)message
+//                      initiatedByFrame:(WKFrameInfo *)frame
+//                     completionHandler:(void (^)(void))completionHandler {
+//  [self.UIDelegateAPI runJavaScriptAlertPanelForDelegateWithIdentifier:self
+//                                                               message:message
+//                                                                 frame:frame
+//                                                     completionHandler:completionHandler];
+//}
 
-- (void)webView:(WKWebView *)webView
-    runJavaScriptConfirmPanelWithMessage:(NSString *)message
-                        initiatedByFrame:(WKFrameInfo *)frame
-                       completionHandler:(void (^)(BOOL))completionHandler {
-  [self.UIDelegateAPI runJavaScriptConfirmPanelForDelegateWithIdentifier:self
-                                                                 message:message
-                                                                   frame:frame
-                                                       completionHandler:completionHandler];
-}
+//- (void)webView:(WKWebView *)webView
+//    runJavaScriptConfirmPanelWithMessage:(NSString *)message
+//                        initiatedByFrame:(WKFrameInfo *)frame
+//                       completionHandler:(void (^)(BOOL))completionHandler {
+//  [self.UIDelegateAPI runJavaScriptConfirmPanelForDelegateWithIdentifier:self
+//                                                                 message:message
+//                                                                   frame:frame
+//                                                       completionHandler:completionHandler];
+//}
 
-- (void)webView:(WKWebView *)webView
-    runJavaScriptTextInputPanelWithPrompt:(NSString *)prompt
-                              defaultText:(NSString *)defaultText
-                         initiatedByFrame:(WKFrameInfo *)frame
-                        completionHandler:(void (^)(NSString *_Nullable))completionHandler {
-  [self.UIDelegateAPI runJavaScriptTextInputPanelForDelegateWithIdentifier:self
-                                                                    prompt:prompt
-                                                               defaultText:defaultText
-                                                                     frame:frame
-                                                         completionHandler:completionHandler];
-}
+//- (void)webView:(WKWebView *)webView
+//    runJavaScriptTextInputPanelWithPrompt:(NSString *)prompt
+//                              defaultText:(NSString *)defaultText
+//                         initiatedByFrame:(WKFrameInfo *)frame
+//                        completionHandler:(void (^)(NSString *_Nullable))completionHandler {
+//  [self.UIDelegateAPI runJavaScriptTextInputPanelForDelegateWithIdentifier:self
+//                                                                    prompt:prompt
+//                                                               defaultText:defaultText
+//                                                                     frame:frame
+//                                                         completionHandler:completionHandler];
+//}
 
 @end
 

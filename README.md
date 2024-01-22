@@ -1,5 +1,6 @@
 Issues fixed:    
 - iOS alert/prompt/confirm: based on https://github.com/fluttercommunity/flutter_webview_plugin/pull/522/commits/052d46018fdf45ce300e45f71657faf2d349479c
+  WE'RE COMMENTING OUT THE WIP OFFICIAL IMPLEMENTATION UNTIL IT'S READY (see runJavaScriptTextInputPanelWithPrompt, runJavaScriptConfirmPanelWithMessage, runJavaScriptAlertPanelWithMessage in FWFUIDelegateHostAPI.m)
 - Android webView.getSettings().setMixedContentMode(WebSettings.MIXED_CONTENT_COMPATIBILITY_MODE) to match behaviour of Chrome (passive mixed content like images is allowed, active mixed content like scripts is not). Mixed content is when resources are loaded via HTTP on a HTTPS page.
 - getCopyBackForwardList (to get the webview history). The implementation is not the best (we pass the data as a Map<String, dynamic) since I couldn't get the class to work)
 
