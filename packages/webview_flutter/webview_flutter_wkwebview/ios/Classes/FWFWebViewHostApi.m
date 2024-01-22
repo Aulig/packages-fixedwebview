@@ -334,10 +334,10 @@
                                                                                  url:[historyItem URL].absoluteString
                                                                                index:@([completeList indexOfObject:historyItem])
                                                                               offset:@([completeList indexOfObject:historyItem] - currentIndex)];
-        [history addObject:[webHistoryItem toList]];
+        [history addObject:webHistoryItem];
     }
 
-    FWFPWebHistory *webHistory = [[PWebHistory alloc] init];
+    FWFPWebHistory *webHistory = [[FWFPWebHistory alloc] init];
     webHistory.history = history;
     webHistory.currentIndex = @(currentIndex);
 
