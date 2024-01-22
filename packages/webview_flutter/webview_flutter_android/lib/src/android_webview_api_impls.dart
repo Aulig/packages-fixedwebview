@@ -329,7 +329,7 @@ class WebViewHostApiImpl extends WebViewHostApi {
 
     return {
       "currentIndex": wh.currentIndex,
-      "hstory": wh.history!.map((e) => {
+      "history": wh.history!.map((e) => {
         "originalUrl": e?.originalUrl,
         "title": e?.title,
         "url": e?.url,
