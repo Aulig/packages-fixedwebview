@@ -125,6 +125,36 @@ class WebViewPoint {
   int y;
 }
 
+class PWebHistoryItem {
+
+  PWebHistoryItem(
+      {this.originalUrl, this.title, this.url, this.index, this.offset});
+  ///Original url of this history item.
+  String? originalUrl;
+
+  ///Document title of this history item.
+  String? title;
+
+  ///Url of this history item.
+  String? url;
+
+  ///0-based position index in the back-forward [WebHistory.list].
+  int? index;
+
+  ///Position offset respect to the currentIndex of the back-forward [WebHistory.list].
+  int? offset;
+}
+
+class PWebHistory {
+
+  PWebHistory({this.history, this.currentIndex});
+  ///List of all [WebHistoryItem]s.
+  List<PWebHistoryItem?>? history;
+
+  ///Index of the current [WebHistoryItem].
+  int? currentIndex;
+}
+
 /// Represents a JavaScript console message from WebCore.
 ///
 /// See https://developer.android.com/reference/android/webkit/ConsoleMessage
@@ -241,6 +271,8 @@ abstract class WebViewHostApi {
   int getScrollY(int instanceId);
 
   WebViewPoint getScrollPosition(int instanceId);
+
+  PWebHistory getCopyBackForwardList(int instanceId);
 
   void setWebContentsDebuggingEnabled(bool enabled);
 

@@ -345,6 +345,10 @@ class WebView extends View {
     return api.getTitleFromInstance(this);
   }
 
+  Future<Map<String, dynamic>?> getCopyBackForwardList() {
+    return api.getCopyBackForwardListFromInstance(this);
+  }
+
   // TODO(bparrishMines): Update documentation when onScrollChanged is added.
   /// Set the scrolled position of your view.
   Future<void> scrollTo(int x, int y) {

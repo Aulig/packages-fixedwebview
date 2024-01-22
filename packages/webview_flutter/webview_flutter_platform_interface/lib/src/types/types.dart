@@ -22,3 +22,5 @@ export 'url_change.dart';
 export 'web_resource_error.dart';
 export 'webview_cookie.dart';
 export 'webview_credential.dart';
+export 'web_history.dart';
+export 'web_history_item.dart';

@@ -13,6 +13,8 @@ import android.view.ViewParent;
 import android.webkit.WebChromeClient;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
+import android.webkit.WebBackForwardList;
+import android.webkit.WebHistoryItem;
 import androidx.annotation.ChecksSdkIntAtLeast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -23,6 +25,7 @@ import io.flutter.plugin.platform.PlatformView;
 import io.flutter.plugins.webviewflutter.GeneratedAndroidWebView.WebViewHostApi;
 import java.util.Map;
 import java.util.Objects;
+import java.util.ArrayList;
 
 /**
  * Host api implementation for {@link WebView}.
@@ -327,6 +330,29 @@ public class WebViewHostApiImpl implements WebViewHostApi {
   public String getTitle(@NonNull Long instanceId) {
     final WebView webView = Objects.requireNonNull(instanceManager.getInstance(instanceId));
     return webView.getTitle();
+  }
+
+  @Nullable
+  @Override
+  public GeneratedAndroidWebView.PWebHistory getCopyBackForwardList(@NonNull Long instanceId) {
+    final WebView webView = Objects.requireNonNull(instanceManager.getInstance(instanceId));
+    WebBackForwardList wbfl = webView.copyBackForwardList();
+
+    ArrayList<GeneratedAndroidWebView.PWebHistoryItem> history = new ArrayList<>();
+
+    for (int i = 0; i < wbfl.getSize(); i++) {
+      WebHistoryItem item = wbfl.getItemAtIndex(i);
+      history.add(new GeneratedAndroidWebView.PWebHistoryItem.Builder()
+          .setOriginalUrl(item.getOriginalUrl())
+          .setTitle(item.getTitle())
+          .setUrl(item.getUrl())
+          .build());
+    }
+
+    return new GeneratedAndroidWebView.PWebHistory.Builder()
+            .setCurrentIndex(new Long(wbfl.getCurrentIndex()))
+            .setHistory(history)
+            .build();
   }
 
   @Override

@@ -374,6 +374,10 @@ class WebViewController {
   Future<String?> getUserAgent() {
     return platform.getUserAgent();
   }
+
+  Future<Map<String, dynamic>?> getCopyBackForwardList() async {
+    return platform.getCopyBackForwardList();
+  }
 }
 
 /// Permissions request when web content requests access to protected resources.

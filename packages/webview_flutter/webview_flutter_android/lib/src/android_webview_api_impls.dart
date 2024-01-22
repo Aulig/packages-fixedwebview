@@ -324,6 +324,19 @@ class WebViewHostApiImpl extends WebViewHostApi {
     return Offset(position.x.toDouble(), position.y.toDouble());
   }
 
+  Future<Map<String, dynamic>?> getCopyBackForwardListFromInstance(WebView instance) async {
+    final PWebHistory wh = await getCopyBackForwardList(instanceManager.getIdentifier(instance)!);
+
+    return {
+      "currentIndex": wh.currentIndex,
+      "hstory": wh.history!.map((e) => {
+        "originalUrl": e?.originalUrl,
+        "title": e?.title,
+        "url": e?.url,
+      }).toList(),
+    };
+  }
+
   /// Helper method to convert instances ids to objects.
   Future<void> setWebViewClientFromInstance(
     WebView instance,
