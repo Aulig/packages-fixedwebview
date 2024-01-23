@@ -6,10 +6,10 @@ class WebHistoryItem {
   final Uri? originalUrl;
 
   ///Document title of this history item.
-  final String? title;
+  final String title;
 
   ///Url of this history item.
-  final Uri? url;
+  final Uri url;
 
   ///0-based position index in the back-forward [WebHistory.list].
   final int? index;
@@ -17,6 +17,5 @@ class WebHistoryItem {
   ///Position offset respect to the currentIndex of the back-forward [WebHistory.list].
   final int? offset;
 
-  WebHistoryItem(
-      {this.originalUrl, this.title, this.url, this.index, this.offset});
+  WebHistoryItem(this.title, this.url, {this.originalUrl, this.index, this.offset});
 }
