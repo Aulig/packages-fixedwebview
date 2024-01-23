@@ -3,13 +3,13 @@ import 'package:meta/meta.dart';
 @immutable
 class WebHistoryItem {
   ///Original url of this history item.
-  final String? originalUrl;
+  final Uri? originalUrl;
 
   ///Document title of this history item.
   final String? title;
 
   ///Url of this history item.
-  final String? url;
+  final Uri? url;
 
   ///0-based position index in the back-forward [WebHistory.list].
   final int? index;
