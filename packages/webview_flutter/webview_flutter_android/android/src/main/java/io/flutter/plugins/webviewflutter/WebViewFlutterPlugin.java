@@ -58,25 +58,6 @@ public class WebViewFlutterPlugin implements FlutterPlugin, ActivityAware {
    */
   public WebViewFlutterPlugin() {}
 
-  /**
-   * Registers a plugin implementation that uses the stable {@code io.flutter.plugin.common}
-   * package.
-   *
-   * <p>Calling this automatically initializes the plugin. However plugins initialized this way
-   * won't react to changes in activity or context, unlike {@link WebViewFlutterPlugin}.
-   */
-  @SuppressWarnings({"unused", "deprecation"})
-  public static void registerWith(
-      @NonNull io.flutter.plugin.common.PluginRegistry.Registrar registrar) {
-    new WebViewFlutterPlugin()
-        .setUp(
-            registrar.messenger(),
-            registrar.platformViewRegistry(),
-            registrar.activity(),
-            new FlutterAssetManager.RegistrarFlutterAssetManager(
-                registrar.context().getAssets(), registrar));
-  }
-
   private void setUp(
       BinaryMessenger binaryMessenger,
       PlatformViewRegistry viewRegistry,
