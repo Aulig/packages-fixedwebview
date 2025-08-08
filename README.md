@@ -14,3 +14,5 @@ set
     }
     
 to make video tags without a poster attribute not display the ugly gray play button
+
+Fix https://github.com/flutter/flutter/issues/140501 via https://github.com/flutter/packages/commit/3fa9cdfa2607d0cdd0ecf4b2107639948864a048
