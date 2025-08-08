@@ -20,6 +20,17 @@ class WebViewImpl: WKWebView {
       if #available(iOS 13.0, *) {
         scrollView.automaticallyAdjustsScrollIndicatorInsets = false
       }
+    
+      if #available(iOS 17.2, *) {
+        NotificationCenter.default.addObserver(
+          self, selector: #selector(keyboardWillShow(notification:)),
+          name: UIResponder.keyboardWillShowNotification,
+          object: nil)
+        NotificationCenter.default.addObserver(
+          self, selector: #selector(keyboardWillHide(notification:)),
+          name: UIResponder.keyboardWillHideNotification,
+          object: nil)
+      }
     #endif
   }
 
@@ -37,25 +48,51 @@ class WebViewImpl: WKWebView {
       forKeyPath: keyPath, of: object, change: change, context: context)
   }
 
-  override var frame: CGRect {
+  private var _scrollViewContentInsetAdjusted = false
+  @objc func keyboardWillShow(notification: NSNotification) {
+    // UIResponder.keyboardWillShowNotification will be fired also
+    // when changing focus between HTML inputs with the keyboard already open
+    if scrollView.adjustedContentInset != .zero {
+      // if resizeToAvoidBottomInset is false on Flutter side,
+      // scrollView.adjustedContentInset.bottom will be > 0
+      if scrollView.adjustedContentInset.bottom > 0 {
+        // if the scrollView.contentInset has already been fixed, do nothing
+        if !_scrollViewContentInsetAdjusted {
+          _scrollViewContentInsetAdjusted = true
+          let insetToAdjust = scrollView.adjustedContentInset
+          scrollView.contentInset = UIEdgeInsets(
+            top: -insetToAdjust.top, left: -insetToAdjust.left,
+            bottom: -insetToAdjust.bottom, right: -insetToAdjust.right)
+        }
+      } else {
+        scrollView.contentInset = .zero
+      }
+    }
+  }
+
+  @objc func keyboardWillHide(notification: NSNotification) {
+    _scrollViewContentInsetAdjusted = false
+  }
+
+  override public var frame: CGRect {
     get {
       return super.frame
     }
     set {
       super.frame = newValue
-      #if os(iOS)
-        // Prevents the contentInsets from being adjusted by iOS and gives control to Flutter.
-        scrollView.contentInset = .zero
 
-        // Adjust contentInset to compensate the adjustedContentInset so the sum will
-        //  always be 0.
-        if scrollView.adjustedContentInset != .zero {
-          let insetToAdjust = scrollView.adjustedContentInset
-          scrollView.contentInset = UIEdgeInsets(
-            top: -insetToAdjust.top, left: -insetToAdjust.left, bottom: -insetToAdjust.bottom,
-            right: -insetToAdjust.right)
-        }
-      #endif
+      // Prevents the contentInsets from being adjusted by iOS and gives control to Flutter.
+      scrollView.contentInset = .zero
+
+      // Adjust contentInset to compensate the adjustedContentInset so the sum will
+      //  always be 0.
+      if scrollView.adjustedContentInset != .zero {
+        let insetToAdjust = scrollView.adjustedContentInset
+        scrollView.contentInset = UIEdgeInsets(
+          top: -insetToAdjust.top, left: -insetToAdjust.left, bottom: -insetToAdjust.bottom,
+          right: -insetToAdjust.right)
+      }
+
     }
   }
 }
