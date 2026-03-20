@@ -237,6 +237,13 @@ abstract class PlatformWebViewController extends PlatformInterface {
     );
   }
 
+  /// Returns a copy of the browser history for this view.
+  Future<Map<String, dynamic>> getCopyBackForwardList() {
+    throw UnimplementedError(
+      'getCopyBackForwardList is not implemented on the current platform',
+    );
+  }
+
   /// Set the scrolled position of this view.
   ///
   /// The parameters `x` and `y` specify the position to scroll to in WebView pixels.

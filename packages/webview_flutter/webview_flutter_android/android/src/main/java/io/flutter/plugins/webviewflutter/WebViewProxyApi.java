@@ -10,7 +10,9 @@ import android.hardware.display.DisplayManager;
 import android.os.Build;
 import android.view.View;
 import android.view.ViewParent;
+import android.webkit.WebBackForwardList;
 import android.webkit.DownloadListener;
+import android.webkit.WebHistoryItem;
 import android.webkit.WebChromeClient;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
@@ -19,6 +21,8 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import io.flutter.embedding.android.FlutterView;
 import io.flutter.plugin.platform.PlatformView;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Map;
 import kotlin.Result;
 import kotlin.Unit;
@@ -229,6 +233,29 @@ public class WebViewProxyApi extends PigeonApiWebView {
   @Override
   public String getTitle(@NonNull WebView pigeon_instance) {
     return pigeon_instance.getTitle();
+  }
+
+  @NonNull
+  @Override
+  public Map<String, Object> getCopyBackForwardList(@NonNull WebView pigeon_instance) {
+    final WebBackForwardList backForwardList = pigeon_instance.copyBackForwardList();
+    final Map<String, Object> historyMap = new HashMap<>();
+    historyMap.put("currentIndex", backForwardList.getCurrentIndex());
+
+    final ArrayList<Map<String, Object>> history = new ArrayList<>();
+    for (int index = 0; index < backForwardList.getSize(); index++) {
+      final WebHistoryItem historyItem = backForwardList.getItemAtIndex(index);
+      final Map<String, Object> item = new HashMap<>();
+      item.put("originalUrl", historyItem.getOriginalUrl());
+      item.put("title", historyItem.getTitle());
+      item.put("url", historyItem.getUrl());
+      item.put("index", index);
+      item.put("offset", index - backForwardList.getCurrentIndex());
+      history.add(item);
+    }
+
+    historyMap.put("history", history);
+    return historyMap;
   }
 
   @Override

@@ -1751,6 +1751,17 @@ void main() {
       verify(mockWebView.getTitle()).called(1);
     });
 
+    test('getCopyBackForwardList', () async {
+      final mockWebView = MockWebView();
+      final AndroidWebViewController controller = createControllerWithMocks(
+        mockWebView: mockWebView,
+      );
+
+      await controller.getCopyBackForwardList();
+
+      verify(mockWebView.getCopyBackForwardList()).called(1);
+    });
+
     test('scrollTo', () async {
       final mockWebView = MockWebView();
       final AndroidWebViewController controller = createControllerWithMocks(

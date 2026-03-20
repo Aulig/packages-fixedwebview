@@ -306,6 +306,11 @@ class WebViewController {
     return platform.getTitle();
   }
 
+  /// Returns a copy of the browser history for this view.
+  Future<Map<String, dynamic>> getCopyBackForwardList() {
+    return platform.getCopyBackForwardList();
+  }
+
   /// Sets the scrolled position of this view.
   ///
   /// The parameters `x` and `y` specify the position to scroll to in WebView

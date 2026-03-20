@@ -245,6 +245,28 @@ void main() {
     await expectLater(webViewController.getTitle(), completion('myTitle'));
   });
 
+  test('getCopyBackForwardList', () async {
+    final mockPlatformWebViewController = MockPlatformWebViewController();
+    when(mockPlatformWebViewController.getCopyBackForwardList()).thenAnswer(
+      (_) => Future<Map<String, dynamic>>.value(<String, dynamic>{
+        'currentIndex': 1,
+        'history': <Map<String, dynamic>>[],
+      }),
+    );
+
+    final webViewController = WebViewController.fromPlatform(
+      mockPlatformWebViewController,
+    );
+
+    await expectLater(
+      webViewController.getCopyBackForwardList(),
+      completion(<String, dynamic>{
+        'currentIndex': 1,
+        'history': <Map<String, dynamic>>[],
+      }),
+    );
+  });
+
   test('scrollTo', () async {
     final mockPlatformWebViewController = MockPlatformWebViewController();
 

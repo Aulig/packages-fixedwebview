@@ -18,6 +18,19 @@ class WebViewImpl: WKWebView {
     #if os(iOS)
       scrollView.contentInsetAdjustmentBehavior = .never
       scrollView.automaticallyAdjustsScrollIndicatorInsets = false
+
+      if #available(iOS 17.2, *) {
+        NotificationCenter.default.addObserver(
+          self,
+          selector: #selector(keyboardWillShow(notification:)),
+          name: UIResponder.keyboardWillShowNotification,
+          object: nil)
+        NotificationCenter.default.addObserver(
+          self,
+          selector: #selector(keyboardWillHide(notification:)),
+          name: UIResponder.keyboardWillHideNotification,
+          object: nil)
+      }
     #endif
   }
 
@@ -35,7 +48,33 @@ class WebViewImpl: WKWebView {
       forKeyPath: keyPath, of: object, change: change, context: context)
   }
 
-  override var frame: CGRect {
+  #if os(iOS)
+  private var scrollViewContentInsetAdjusted = false
+
+  @objc func keyboardWillShow(notification: NSNotification) {
+    if scrollView.adjustedContentInset != .zero {
+      if scrollView.adjustedContentInset.bottom > 0 {
+        if !scrollViewContentInsetAdjusted {
+          scrollViewContentInsetAdjusted = true
+          let insetToAdjust = scrollView.adjustedContentInset
+          scrollView.contentInset = UIEdgeInsets(
+            top: -insetToAdjust.top,
+            left: -insetToAdjust.left,
+            bottom: -insetToAdjust.bottom,
+            right: -insetToAdjust.right)
+        }
+      } else {
+        scrollView.contentInset = .zero
+      }
+    }
+  }
+
+  @objc func keyboardWillHide(notification: NSNotification) {
+    scrollViewContentInsetAdjusted = false
+  }
+  #endif
+
+  override public var frame: CGRect {
     get {
       return super.frame
     }
@@ -273,6 +312,43 @@ class WebViewProxyAPIDelegate: PigeonApiDelegateWKWebView, PigeonApiDelegateUIVi
 
   func getTitle(pigeonApi: PigeonApiNSViewWKWebView, pigeonInstance: WKWebView) throws -> String? {
     return try getTitle(pigeonApi: getUIViewWKWebViewAPI(pigeonApi), pigeonInstance: pigeonInstance)
+  }
+
+  func getCopyBackForwardList(pigeonApi: PigeonApiUIViewWKWebView, pigeonInstance: WKWebView)
+    throws -> [String: Any]
+  {
+    let backForwardList = pigeonInstance.backForwardList
+    let currentIndex = backForwardList.backList.count
+
+    var completeList: [WKBackForwardListItem] = backForwardList.backList
+    if let currentItem = backForwardList.currentItem {
+      completeList.append(currentItem)
+    }
+    completeList.append(contentsOf: backForwardList.forwardList)
+
+    var history: [[String: Any]] = []
+    for (index, historyItem) in completeList.enumerated() {
+      history.append([
+        "originalUrl": historyItem.initialURL.absoluteString,
+        "title": historyItem.title ?? "",
+        "url": historyItem.url.absoluteString,
+        "index": index,
+        "offset": index - currentIndex,
+      ])
+    }
+
+    return [
+      "currentIndex": currentIndex,
+      "history": history,
+    ]
+  }
+
+  func getCopyBackForwardList(pigeonApi: PigeonApiNSViewWKWebView, pigeonInstance: WKWebView)
+    throws -> [String: Any]
+  {
+    return try getCopyBackForwardList(
+      pigeonApi: getUIViewWKWebViewAPI(pigeonApi),
+      pigeonInstance: pigeonInstance)
   }
 
   func setAllowsBackForwardNavigationGestures(

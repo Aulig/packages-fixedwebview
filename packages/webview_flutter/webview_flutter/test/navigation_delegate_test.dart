@@ -82,6 +82,7 @@ void main() {
       final delegate = NavigationDelegate(onUrlChange: onUrlChange);
 
       verify(delegate.platform.setOnUrlChange(onUrlChange));
+      expect(delegate.onUrlChange, onUrlChange);
     });
 
     test('onHttpAuthRequest', () {

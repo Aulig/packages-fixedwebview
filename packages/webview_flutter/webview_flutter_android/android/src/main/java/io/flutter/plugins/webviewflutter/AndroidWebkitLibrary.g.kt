@@ -1734,6 +1734,9 @@ abstract class PigeonApiWebView(
   /** Gets the title for the current page. */
   abstract fun getTitle(pigeon_instance: android.webkit.WebView): String?
 
+  /** Gets a copy of the browser history list. */
+  abstract fun getCopyBackForwardList(pigeon_instance: android.webkit.WebView): Map<String, Any>
+
   /**
    * Enables debugging of web contents (HTML / CSS / JavaScript) loaded into any WebViews of this
    * application.
@@ -2131,6 +2134,28 @@ abstract class PigeonApiWebView(
             val wrapped: List<Any?> =
                 try {
                   listOf(api.getTitle(pigeon_instanceArg))
+                } catch (exception: Throwable) {
+                  AndroidWebkitLibraryPigeonUtils.wrapError(exception)
+                }
+            reply.reply(wrapped)
+          }
+        } else {
+          channel.setMessageHandler(null)
+        }
+      }
+      run {
+        val channel =
+            BasicMessageChannel<Any?>(
+                binaryMessenger,
+                "dev.flutter.pigeon.webview_flutter_android.WebView.getCopyBackForwardList",
+                codec)
+        if (api != null) {
+          channel.setMessageHandler { message, reply ->
+            val args = message as List<Any?>
+            val pigeon_instanceArg = args[0] as android.webkit.WebView
+            val wrapped: List<Any?> =
+                try {
+                  listOf(api.getCopyBackForwardList(pigeon_instanceArg))
                 } catch (exception: Throwable) {
                   AndroidWebkitLibraryPigeonUtils.wrapError(exception)
                 }

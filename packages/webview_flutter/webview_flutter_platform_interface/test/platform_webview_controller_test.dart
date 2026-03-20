@@ -307,6 +307,21 @@ void main() {
   );
 
   test(
+    'Default implementation of getCopyBackForwardList should throw unimplemented error',
+    () {
+      final PlatformWebViewController controller =
+          ExtendsPlatformWebViewController(
+            const PlatformWebViewControllerCreationParams(),
+          );
+
+      expect(
+        () => controller.getCopyBackForwardList(),
+        throwsUnimplementedError,
+      );
+    },
+  );
+
+  test(
     'Default implementation of scrollTo should throw unimplemented error',
     () {
       final PlatformWebViewController controller =

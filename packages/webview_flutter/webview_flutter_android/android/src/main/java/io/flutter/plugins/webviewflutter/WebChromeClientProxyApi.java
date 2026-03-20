@@ -4,6 +4,7 @@
 
 package io.flutter.plugins.webviewflutter;
 
+import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Message;
 import android.view.View;
@@ -71,6 +72,11 @@ public class WebChromeClientProxyApi extends PigeonApiWebChromeClient {
     @Override
     public void onGeolocationPermissionsHidePrompt() {
       api.onGeolocationPermissionsHidePrompt(this, reply -> null);
+    }
+
+    @Override
+    public Bitmap getDefaultVideoPoster() {
+      return Bitmap.createBitmap(1, 1, Bitmap.Config.ARGB_8888);
     }
 
     @SuppressWarnings("LambdaLast")

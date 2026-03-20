@@ -255,6 +255,16 @@ class MockPlatformWebViewController extends _i1.Mock
           as _i7.Future<String?>);
 
   @override
+  _i7.Future<Map<String, dynamic>> getCopyBackForwardList() =>
+      (super.noSuchMethod(
+            Invocation.method(#getCopyBackForwardList, []),
+            returnValue: _i7.Future<Map<String, dynamic>>.value(
+              <String, dynamic>{},
+            ),
+          )
+          as _i7.Future<Map<String, dynamic>>);
+
+  @override
   _i7.Future<void> scrollTo(int? x, int? y) =>
       (super.noSuchMethod(
             Invocation.method(#scrollTo, [x, y]),

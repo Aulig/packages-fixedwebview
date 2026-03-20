@@ -919,6 +919,9 @@ abstract class UIViewWKWebView extends UIView implements WKWebView {
   /// The page title.
   String? getTitle();
 
+  /// A copy of the back-forward history list.
+  Map<String, Object> getCopyBackForwardList();
+
   /// A Boolean value that indicates whether horizontal swipe gestures trigger
   /// backward and forward page navigation.
   void setAllowsBackForwardNavigationGestures(bool allow);
@@ -1007,6 +1010,9 @@ abstract class NSViewWKWebView extends NSObject implements WKWebView {
 
   /// The page title.
   String? getTitle();
+
+  /// A copy of the back-forward history list.
+  Map<String, Object> getCopyBackForwardList();
 
   /// A Boolean value that indicates whether horizontal swipe gestures trigger
   /// backward and forward page navigation.

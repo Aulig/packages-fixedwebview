@@ -156,6 +156,19 @@ class PlatformWebView {
     throw UnimplementedError('${webView.runtimeType} is not supported.');
   }
 
+  /// A copy of the back-forward history list.
+  Future<Map<String, dynamic>> getCopyBackForwardList() {
+    final WKWebView webView = nativeWebView;
+    switch (webView) {
+      case UIViewWKWebView():
+        return webView.getCopyBackForwardList();
+      case NSViewWKWebView():
+        return webView.getCopyBackForwardList();
+    }
+
+    throw UnimplementedError('${webView.runtimeType} is not supported.');
+  }
+
   /// The URL being requested.
   Future<String?> getUrl() {
     final WKWebView webView = nativeWebView;

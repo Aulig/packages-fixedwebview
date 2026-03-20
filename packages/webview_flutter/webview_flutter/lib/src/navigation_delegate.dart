@@ -134,7 +134,7 @@ class NavigationDelegate {
     this.onPageFinished,
     this.onProgress,
     this.onWebResourceError,
-    void Function(UrlChange change)? onUrlChange,
+    this.onUrlChange,
     HttpAuthRequestCallback? onHttpAuthRequest,
     void Function(HttpResponseError error)? onHttpError,
     void Function(SslAuthError request)? onSslAuthError,
@@ -155,7 +155,7 @@ class NavigationDelegate {
       platform.setOnWebResourceError(onWebResourceError!);
     }
     if (onUrlChange != null) {
-      platform.setOnUrlChange(onUrlChange);
+      platform.setOnUrlChange(onUrlChange!);
     }
     if (onHttpAuthRequest != null) {
       platform.setOnHttpAuthRequest(onHttpAuthRequest);
@@ -196,6 +196,9 @@ class NavigationDelegate {
 
   /// Invoked when a resource loading error occurred.
   final WebResourceErrorCallback? onWebResourceError;
+
+  /// Invoked when the underlying web view changes to a new URL.
+  final UrlChangeCallback? onUrlChange;
 }
 
 /// Represents an SSL error with the associated certificate.

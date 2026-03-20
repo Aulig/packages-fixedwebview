@@ -1422,6 +1422,19 @@ class MockUIViewWKWebView extends _i1.Mock implements _i2.UIViewWKWebView {
           as _i3.Future<String?>);
 
   @override
+  _i3.Future<Map<String, Object>> getCopyBackForwardList() =>
+      (super.noSuchMethod(
+            Invocation.method(#getCopyBackForwardList, []),
+            returnValue: _i3.Future<Map<String, Object>>.value(
+              <String, Object>{},
+            ),
+            returnValueForMissingStub: _i3.Future<Map<String, Object>>.value(
+              <String, Object>{},
+            ),
+          )
+          as _i3.Future<Map<String, Object>>);
+
+  @override
   _i3.Future<void> setAllowsBackForwardNavigationGestures(bool? allow) =>
       (super.noSuchMethod(
             Invocation.method(#setAllowsBackForwardNavigationGestures, [allow]),

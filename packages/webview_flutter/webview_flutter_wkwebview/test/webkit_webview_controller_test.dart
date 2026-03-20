@@ -648,6 +648,28 @@ void main() {
       expect(controller.getTitle(), completion('Web Title'));
     });
 
+    test('getCopyBackForwardList', () async {
+      final mockWebView = MockUIViewWKWebView();
+
+      final WebKitWebViewController controller = createControllerWithMocks(
+        createMockWebView: (_, {dynamic observeValue}) => mockWebView,
+      );
+
+      when(mockWebView.getCopyBackForwardList()).thenAnswer(
+        (_) => Future<Map<String, Object>>.value(<String, Object>{
+          'currentIndex': 0,
+          'history': <Map<String, Object>>[],
+        }),
+      );
+      expect(
+        controller.getCopyBackForwardList(),
+        completion(<String, dynamic>{
+          'currentIndex': 0,
+          'history': <Map<String, Object>>[],
+        }),
+      );
+    });
+
     test('currentUrl', () {
       final mockWebView = MockUIViewWKWebView();
 

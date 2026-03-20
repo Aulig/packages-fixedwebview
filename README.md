@@ -1,3 +1,44 @@
+# Fork Changes
+
+- This fork only changes packages under `packages/webview_flutter/`.
+- `onUrlChange` accessibility fix:
+  `NavigationDelegate` must expose `onUrlChange` as a public field, not only accept it as a constructor parameter.
+  Upstream may appear to have this feature because the callback can be passed into the constructor, but that is not enough for this fork. The fix also stored it on the class with `this.onUrlChange` and `final UrlChangeCallback? onUrlChange;`.
+  Main file to verify:
+  `packages/webview_flutter/webview_flutter/lib/src/navigation_delegate.dart`
+- `getCopyBackForwardList` support:
+  The app-facing `WebViewController` must expose `getCopyBackForwardList()`.
+  `PlatformWebViewController` must define it.
+  Android and WKWebView implementations must both implement it.
+  The current return type used by this fork is still `Map<String, dynamic>`, matching the original forked behavior.
+  `WebHistory` and `WebHistoryItem` were also added/exported in the platform interface, but the method was not converted to return those types directly.
+  Main files to verify:
+  `packages/webview_flutter/webview_flutter/lib/src/webview_controller.dart`
+  `packages/webview_flutter/webview_flutter_platform_interface/lib/src/platform_webview_controller.dart`
+  `packages/webview_flutter/webview_flutter_platform_interface/lib/src/types/web_history.dart`
+  `packages/webview_flutter/webview_flutter_platform_interface/lib/src/types/web_history_item.dart`
+  `packages/webview_flutter/webview_flutter_android/lib/src/android_webview_controller.dart`
+  `packages/webview_flutter/webview_flutter_wkwebview/lib/src/webkit_webview_controller.dart`
+- Android default video poster fix:
+  `WebChromeClient.getDefaultVideoPoster()` should return a 1x1 transparent bitmap so videos without a `poster` attribute do not show the default gray play button.
+  Main file to verify:
+  `packages/webview_flutter/webview_flutter_android/android/src/main/java/io/flutter/plugins/webviewflutter/WebChromeClientProxyApi.java`
+- iOS keyboard workaround:
+  This fork includes the workaround for https://github.com/flutter/flutter/issues/140501 based on https://github.com/flutter/packages/commit/3fa9cdfa2607d0cdd0ecf4b2107639948864a048.
+  When upgrading, compare upstream carefully before dropping this patch. If upstream changed nearby scroll inset handling, this workaround may still be needed but may need to be adapted instead of copied verbatim.
+  Main file to verify:
+  `packages/webview_flutter/webview_flutter_wkwebview/darwin/webview_flutter_wkwebview/Sources/webview_flutter_wkwebview/WebViewProxyAPIDelegate.swift`
+
+Update to latest state:
+
+1. sync fork on github (main branch)
+2. check out main branch locally and pull
+3. prompt AI agent like:
+
+The current repo is a fork of the flutter community packages repo. Branch main is the original up to date version as maintained by the flutter team and community. I have created a fork based-on-wvf4131. I created it when 4.13.1 was the latest version of webview_flutter. In there, I fixed some issues. A rough overview can be found in the top level readme.md. I didn't touch any package except webview_flutter.
+
+Since then there have been upstream changes to webview flutter. Your goal is to create a new branch based-on-wvfXXXX which is based on the current state of the repo but you port over all the fixes that i made in the based-on-wvf4131 branch. To do that, look at my commits on that branch to see how I implemented the fixes. The first commit from me is "make onurlchange accessible", the ones before that (before March 13th) are from the flutter community.
+
 # Flutter Packages
 
 [![Release Status](https://github.com/flutter/packages/actions/workflows/release.yml/badge.svg)](https://github.com/flutter/packages/actions/workflows/release.yml)

@@ -542,6 +542,16 @@ class MockWebView extends _i1.Mock implements _i2.WebView {
           as _i4.Future<String?>);
 
   @override
+  _i4.Future<Map<String, Object>> getCopyBackForwardList() =>
+      (super.noSuchMethod(
+            Invocation.method(#getCopyBackForwardList, []),
+            returnValue: _i4.Future<Map<String, Object>>.value(
+              <String, Object>{},
+            ),
+          )
+          as _i4.Future<Map<String, Object>>);
+
+  @override
   _i4.Future<void> setWebViewClient(_i2.WebViewClient? client) =>
       (super.noSuchMethod(
             Invocation.method(#setWebViewClient, [client]),

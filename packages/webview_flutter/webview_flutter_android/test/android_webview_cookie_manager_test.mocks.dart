@@ -329,6 +329,16 @@ class MockAndroidWebViewController extends _i1.Mock
           as _i5.Future<String?>);
 
   @override
+  _i5.Future<Map<String, dynamic>> getCopyBackForwardList() =>
+      (super.noSuchMethod(
+            Invocation.method(#getCopyBackForwardList, []),
+            returnValue: _i5.Future<Map<String, dynamic>>.value(
+              <String, dynamic>{},
+            ),
+          )
+          as _i5.Future<Map<String, dynamic>>);
+
+  @override
   _i5.Future<void> scrollTo(int? x, int? y) =>
       (super.noSuchMethod(
             Invocation.method(#scrollTo, [x, y]),

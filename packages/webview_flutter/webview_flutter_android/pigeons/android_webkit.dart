@@ -329,6 +329,9 @@ abstract class WebView extends View {
   /// Gets the title for the current page.
   String? getTitle();
 
+  /// Gets a copy of the browser history list.
+  Map<String, Object> getCopyBackForwardList();
+
   /// Enables debugging of web contents (HTML / CSS / JavaScript) loaded into
   /// any WebViews of this application.
   @static
