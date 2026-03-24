@@ -39,6 +39,22 @@ The current repo is a fork of the flutter community packages repo. Branch main i
 
 Since then there have been upstream changes to webview flutter. Your goal is to create a new branch based-on-wvfXXXX which is based on the current state of the repo but you port over all the fixes that i made in the based-on-wvf4131 branch. To do that, look at my commits on that branch to see how I implemented the fixes. The first commit from me is "make onurlchange accessible", the ones before that (before March 13th) are from the flutter community.
 
+4. Test by setting your local dependencies to
+
+```
+webview_flutter:   # also notice the webview_flutter_android & webview_flutter_wkwebview dependency overrides below
+  path: "/home/jan/ownprograms/apps/flutter/webtoapp/forks/packages-fixedwebview/packages/webview_flutter/webview_flutter"
+  xml: 6.5.0 # so we can parse the shared preferences file created by appetize
+
+dependency_overrides:
+  webview_flutter_android:
+  path: "/home/jan/ownprograms/apps/flutter/webtoapp/forks/packages-fixedwebview/packages/webview_flutter/webview_flutter_android"
+  webview_flutter_wkwebview:
+  path: "/home/jan/ownprograms/apps/flutter/webtoapp/forks/packages-fixedwebview/packages/webview_flutter/webview_flutter_wkwebview"
+  webview_flutter_platform_interface:
+  path: "/home/jan/ownprograms/apps/flutter/webtoapp/forks/packages-fixedwebview/packages/webview_flutter/webview_flutter_platform_interface"
+```
+
 # Flutter Packages
 
 [![Release Status](https://github.com/flutter/packages/actions/workflows/release.yml/badge.svg)](https://github.com/flutter/packages/actions/workflows/release.yml)
