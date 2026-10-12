@@ -964,9 +964,19 @@ var _flutter_webview_plugin_overrides = _flutter_webview_plugin_overrides || {
     };
   },
   log: function (type, args) {
-    var message =  Object.values(args)
-        .map(v => typeof(v) === "undefined" ? "undefined" : typeof(v) === "object" ? JSON.stringify(v, _flutter_webview_plugin_overrides.removeCyclicObject()) : v.toString())
-        .map(v => v.substring(0, 3000)) // Limit msg to 3000 chars
+    var message = Object.values(args)
+        .map(v => {
+          try {
+            const value = typeof v === "object" && v !== null
+                ? JSON.stringify(v, _flutter_webview_plugin_overrides.removeCyclicObject())
+                : String(v);
+            return String(value).substring(0, 3000); // Limit msg to 3000 chars
+          } catch (_) {
+            // Cross-origin windows and objects with throwing getters cannot be
+            // serialized. Logging them must not interrupt the website's code.
+            return "[Unserializable console argument]";
+          }
+        })
         .join(", ");
 
     var log = {
@@ -974,7 +984,12 @@ var _flutter_webview_plugin_overrides = _flutter_webview_plugin_overrides || {
       message: message
     };
 
-    window.webkit.messageHandlers.$_onConsoleMessageChannelName.postMessage(JSON.stringify(log));
+    try {
+      window.webkit.messageHandlers.$_onConsoleMessageChannelName.postMessage(JSON.stringify(log));
+    } catch (_) {
+      // Console forwarding is diagnostic only. A failed native bridge must not
+      // prevent the original console method or the website's code from running.
+    }
   }
 };
 
@@ -991,7 +1006,7 @@ console.error = function() { _flutter_webview_plugin_overrides.log("error", argu
 console.debug = function() { _flutter_webview_plugin_overrides.log("debug", arguments); originalDebug.apply(null, arguments) };
 
 window.addEventListener("error", function(e) {
-  log("error", e.message + " at " + e.filename + ":" + e.lineno + ":" + e.colno);
+  _flutter_webview_plugin_overrides.log("error", [e.message + " at " + e.filename + ":" + e.lineno + ":" + e.colno]);
 });
       ''',
       injectionTime: UserScriptInjectionTime.atDocumentStart,

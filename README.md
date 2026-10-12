@@ -29,6 +29,13 @@
   Main file to verify:
   `packages/webview_flutter/webview_flutter_wkwebview/darwin/webview_flutter_wkwebview/Sources/webview_flutter_wkwebview/WebViewProxyAPIDelegate.swift`
 
+- iOS console forwarding safety fix:
+  Logging a cross-origin window (including one nested inside another object) can make `JSON.stringify()` throw a `SecurityError`. PayPal checkout logs showed this exception
+  Serialize each console argument inside a `try`/`catch`, replacing unserializable arguments with `"[Unserializable console argument]"`. Guard the message bridge too, so forwarding failures do not interrupt website JavaScript or prevent the original console method from running.
+  The uncaught JavaScript error handler also calls the correct forwarding function with an argument array.
+  Main files to verify:
+  `packages/webview_flutter/webview_flutter_wkwebview/lib/src/webkit_webview_controller.dart`
+
 Update to latest state:
 
 1. sync fork on github (main branch)
