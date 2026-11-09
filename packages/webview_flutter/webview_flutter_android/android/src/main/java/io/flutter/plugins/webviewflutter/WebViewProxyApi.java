@@ -10,10 +10,10 @@ import android.hardware.display.DisplayManager;
 import android.os.Build;
 import android.view.View;
 import android.view.ViewParent;
-import android.webkit.WebBackForwardList;
 import android.webkit.DownloadListener;
-import android.webkit.WebHistoryItem;
+import android.webkit.WebBackForwardList;
 import android.webkit.WebChromeClient;
+import android.webkit.WebHistoryItem;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
@@ -46,7 +46,13 @@ public class WebViewProxyApi extends PigeonApiWebView {
     WebViewPlatformView(@NonNull WebViewProxyApi api) {
       super(api.getPigeonRegistrar().getContext());
       this.api = api;
-      currentWebViewClient = new WebViewClient();
+      currentWebViewClient =
+          new WebViewClient() {
+            @Override
+            public void onPageStarted(WebView view, String url, android.graphics.Bitmap favicon) {
+              api.getPigeonRegistrar().javaScriptEvaluator.documentChanged(view).run();
+            }
+          };
       currentWebChromeClient = new WebChromeClientProxyApi.SecureWebChromeClient();
 
       setWebViewClient(currentWebViewClient);
@@ -61,6 +67,13 @@ public class WebViewProxyApi extends PigeonApiWebView {
 
     @Override
     public void dispose() {}
+
+    @Override
+    public void destroy() {
+      // The instance manager also calls destroy directly when Dart releases its WebView proxy.
+      api.getPigeonRegistrar().javaScriptEvaluator.dispose(this);
+      super.destroy();
+    }
 
     // TODO(bparrishMines): This should be removed once https://github.com/flutter/engine/pull/40771 makes it to stable.
     // Temporary fix for https://github.com/flutter/flutter/issues/92165. The FlutterView is setting
@@ -225,8 +238,7 @@ public class WebViewProxyApi extends PigeonApiWebView {
       @NonNull WebView pigeon_instance,
       @NonNull String javascriptString,
       @NonNull Function1<? super Result<String>, Unit> callback) {
-    pigeon_instance.evaluateJavascript(
-        javascriptString, result -> ResultCompat.success(result, callback));
+    getPigeonRegistrar().javaScriptEvaluator.evaluate(pigeon_instance, javascriptString, callback);
   }
 
   @Nullable
@@ -306,6 +318,7 @@ public class WebViewProxyApi extends PigeonApiWebView {
 
   @Override
   public void destroy(@NonNull WebView pigeon_instance) {
+    getPigeonRegistrar().javaScriptEvaluator.dispose(pigeon_instance);
     pigeon_instance.destroy();
   }
 }

@@ -1,3 +1,14 @@
+## 4.11.0+webtoapp.1
+
+* Exposes `JavaScriptDocumentChangedException` for document-change cancellations.
+* Completes pending JavaScript evaluations with `javascript_document_changed` when
+  their document is replaced and no acknowledgement arrives within a 50 ms
+  grace period, instead of waiting indefinitely for a discarded Android callback.
+  Scripts may already have executed and are never retried.
+* Completes pending evaluations with `javascript_execution_disposed` when their
+  WebView or Flutter engine is disposed. Ordinary execution and result conversion
+  are unchanged.
+
 ## 4.10.13
 
 * Bumps androidx.webkit:webkit from 1.14.0 to 1.15.0.

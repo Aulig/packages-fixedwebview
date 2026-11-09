@@ -14,6 +14,7 @@ import 'package:webview_flutter_platform_interface/webview_flutter_platform_inte
 import 'android_ssl_auth_error.dart';
 import 'android_webkit.g.dart' as android_webview;
 import 'android_webkit_constants.dart';
+import 'javascript_document_changed_exception.dart';
 import 'platform_views_service_proxy.dart';
 import 'weak_reference_utils.dart';
 
@@ -543,12 +544,12 @@ class AndroidWebViewController extends PlatformWebViewController {
 
   @override
   Future<void> runJavaScript(String javaScript) {
-    return _webView.evaluateJavascript(javaScript);
+    return _evaluateJavaScript(javaScript);
   }
 
   @override
   Future<Object> runJavaScriptReturningResult(String javaScript) async {
-    final String? result = await _webView.evaluateJavascript(javaScript);
+    final String? result = await _evaluateJavaScript(javaScript);
 
     if (result == null) {
       return '';
@@ -559,6 +560,17 @@ class AndroidWebViewController extends PlatformWebViewController {
     }
 
     return num.tryParse(result) ?? result;
+  }
+
+  Future<String?> _evaluateJavaScript(String javaScript) async {
+    try {
+      return await _webView.evaluateJavascript(javaScript);
+    } on PlatformException catch (error) {
+      if (error.code == 'javascript_document_changed') {
+        throw JavaScriptDocumentChangedException();
+      }
+      rethrow;
+    }
   }
 
   @override

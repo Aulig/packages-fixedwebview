@@ -17,6 +17,8 @@ import io.flutter.plugin.common.BinaryMessenger;
 public class ProxyApiRegistrar extends AndroidWebkitLibraryPigeonProxyApiRegistrar {
   @NonNull private Context context;
 
+  @NonNull final JavaScriptEvaluator javaScriptEvaluator = new JavaScriptEvaluator();
+
   @NonNull private final FlutterAssetManager flutterAssetManager;
 
   public ProxyApiRegistrar(

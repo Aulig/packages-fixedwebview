@@ -38,7 +38,21 @@ public class WebViewClientProxyApi extends PigeonApiWebViewClient {
     @Override
     public void onPageStarted(@NonNull WebView view, @NonNull String url, @NonNull Bitmap favicon) {
       api.getPigeonRegistrar()
-          .runOnMainThread(() -> api.onPageStarted(this, view, url, reply -> null));
+          .runOnMainThread(
+              () -> {
+                final Runnable cancelPreviousDocument =
+                    api.getPigeonRegistrar().javaScriptEvaluator.documentChanged(view);
+                api.onPageStarted(
+                    this,
+                    view,
+                    url,
+                    reply -> {
+                      // Let Dart observe the new document before an error releases its JavaScript mutex.
+                      // Only the requests captured above are cancelled; new-document calls are untouched.
+                      api.getPigeonRegistrar().runOnMainThread(cancelPreviousDocument);
+                      return null;
+                    });
+              });
     }
 
     @Override

@@ -36,6 +36,22 @@
   Main files to verify:
   `packages/webview_flutter/webview_flutter_wkwebview/lib/src/webkit_webview_controller.dart`
 
+- Android JavaScript callback recovery during document replacement:
+  Workaround for [flutter/flutter#196202](https://github.com/flutter/flutter/issues/196202): Android System WebView 157 (including Vanadium) can abandon an `evaluateJavascript` callback during navigation, leaving both `runJavaScript()` and `runJavaScriptReturningResult()` Futures pending forever.
+  Track pending evaluations per WebView. At native `onPageStarted`, snapshot the pending requests and, after Dart acknowledges the event, cancel only those still pending after a 50 ms grace period measured from that page-start event. Normal callbacks during the grace period retain their results; later evaluations are not included, and late callbacks cannot reply twice.
+  Dart exposes these cancellations as `JavaScriptDocumentChangedException`. Cancellation does not prove that the script did not execute, so callers must not blindly retry scripts with side effects. A legitimate callback arriving after the grace period can also be cancelled; this is not a general JavaScript execution timeout.
+  Destroying a WebView or detaching the Flutter engine also settles pending evaluations, with `javascript_execution_disposed`.
+  When upgrading, verify both void and result-returning evaluations across real document replacements before removing this workaround. Slow execution and same-document navigation must still complete normally.
+  Main files to verify:
+  `packages/webview_flutter/webview_flutter_android/android/src/main/java/io/flutter/plugins/webviewflutter/JavaScriptEvaluator.java`
+  `packages/webview_flutter/webview_flutter_android/android/src/main/java/io/flutter/plugins/webviewflutter/WebViewClientProxyApi.java`
+  `packages/webview_flutter/webview_flutter_android/android/src/main/java/io/flutter/plugins/webviewflutter/WebViewProxyApi.java`
+  `packages/webview_flutter/webview_flutter_android/android/src/main/java/io/flutter/plugins/webviewflutter/WebViewFlutterPlugin.java`
+  `packages/webview_flutter/webview_flutter_android/lib/src/android_webview_controller.dart`
+  `packages/webview_flutter/webview_flutter_android/lib/src/javascript_document_changed_exception.dart`
+  Regression coverage:
+  `packages/webview_flutter/webview_flutter_android/example/integration_test/javascript_evaluation_lifecycle_test.dart`
+
 Update to latest state:
 
 1. sync fork on github (main branch)
